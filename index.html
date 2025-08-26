@@ -1,513 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Neon Wishes — Submit a Wish</title>
-
-  <!-- Google font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
-  <!-- EmailJS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Feedback Form</title>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
-
   <style>
-    :root{
-      --bg:#050509;
-      --glass: rgba(255,255,255,0.03);
-      --neon1: #00f0ff;
-      --neon2: #ff3ef0;
-      --accent: #00ffb3;
-      --text:#e8f9ff;
-      --muted:#9aa6b2;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(0,240,255,0.06), transparent 8%),
-      radial-gradient(900px 450px at 90% 90%, rgba(255,62,240,0.04), transparent 8%),
-      var(--bg);
-      color:var(--text);
-      font-family:'Poppins',sans-serif;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    body {
+      background-color: #0a0a0a;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    /* centered layout */
-    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;}
-    .card{
-      width:100%;
-      max-width:760px;
-      border-radius:18px;
-      padding:28px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      position:relative;
-      overflow:hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 40px rgba(0,240,255,0.05);
-      border: 1px solid rgba(255,255,255,0.03);
+    .form-container {
+      background: rgba(20, 20, 20, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+      width: 420px;
+      text-align: center;
+      color: #fff;
     }
 
-    /* neon header */
-    .hero{
-      display:flex;gap:18px;align-items:center;margin-bottom:18px;
-    }
-    .neon-badge{
-      font-weight:700;
-      font-size:22px;
-      padding:10px 16px;
-      border-radius:12px;
-      color:var(--neon1);
-      text-shadow: 0 0 8px rgba(0,240,255,0.9), 0 0 20px rgba(0,240,255,0.45);
-      background: linear-gradient(90deg, rgba(0,240,255,0.02), rgba(255,62,240,0.01));
-      border:1px solid rgba(0,240,255,0.08);
-    }
-    .subtitle{color:var(--muted);font-size:14px;margin-top:4px;}
-
-    /* form grid */
-    form.grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-      align-items:start;
-    }
-    .full{grid-column:1 / -1}
-
-    /* neon inputs */
-    .field{
-      position:relative;
-    }
-    .field input, .field textarea{
-      width:100%;
-      padding:14px 14px;
-      border-radius:10px;
-      border: 1px solid rgba(255,255,255,0.04);
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      color:var(--text);
-      outline:none;
-      font-size:14px;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.35);
-      transition: box-shadow .18s, border-color .18s, transform .08s;
-    }
-    .field textarea{min-height:120px;resize:vertical;padding-top:16px}
-
-    .field input:focus, .field textarea:focus{
-      border-color: rgba(0,240,255,0.8);
-      box-shadow: 0 0 18px rgba(0,240,255,0.12), 0 0 38px rgba(0,240,255,0.06);
-      transform: translateY(-2px);
+    .form-container h1 {
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
 
-    label.floating{
-      position:absolute;
-      left:14px;
-      top:10px;
-      font-size:12px;
-      color:var(--muted);
-      pointer-events:none;
-      transition: transform .15s, font-size .15s, top .15s;
-    }
-    .field input:focus + label.floating,
-    .field input:not(:placeholder-shown) + label.floating,
-    .field textarea:focus + label.floating,
-    .field textarea:not(:placeholder-shown) + label.floating{
-      transform: translateY(-24px);
-      font-size:11px;
-      top:6px;
-      color:var(--neon1);
-      text-shadow: 0 0 6px rgba(0,240,255,0.6);
+    .form-container input,
+    .form-container textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: #111;
+      color: #0ff;
+      font-size: 14px;
+      box-shadow: inset 0 0 10px #0ff;
     }
 
-    /* validations and captcha */
-    .validations{
-      margin-top:12px;
-      grid-column:1 / -1;
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
+    .form-container textarea {
+      resize: none;
+      height: 100px;
     }
-    .errors{
-      background:rgba(255,255,255,0.01);
-      padding:12px;border-radius:10px;
-      border:1px solid rgba(255,255,255,0.02);
-      width:100%;
-      color:#ffc7de;
-      font-size:13px;
-      box-shadow: inset 0 -6px 24px rgba(255,62,240,0.02);
-      max-height:140px;
-      overflow:auto;
-    }
-    .captcha{
-      min-width:220px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.12));
-      padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);
-    }
-    .captcha .row{display:flex;gap:8px;align-items:center;margin-top:8px}
-    .captcha input[type="checkbox"]{transform:scale(1.2);accent-color: var(--neon1);}
 
-    /* submit area */
-    .actions{display:flex;gap:12px;align-items:center;margin-top:18px}
-    .btn{
-      padding:12px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:700;
-      background:linear-gradient(90deg,var(--neon1),var(--neon2));
-      color:#000;
-      text-shadow:none;
-      box-shadow: 0 6px 26px rgba(0,240,255,0.08), 0 0 40px rgba(255,62,240,0.06);
-      transition: transform .08s, opacity .15s;
+    .form-container button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #0ff;
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 15px #0ff, 0 0 25px #0ff;
     }
-    .btn:active{transform:translateY(2px)}
-    .btn[disabled]{opacity:0.45;cursor:not-allowed;box-shadow:none;transform:none}
 
-    .status{font-size:13px;color:var(--muted)}
+    .form-container button:disabled {
+      background: #333;
+      color: #777;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
 
-    /* small helper */
-    .hint{font-size:12px;color:var(--muted); margin-top:8px}
-    @media (max-width:720px){
-      form.grid{grid-template-columns: 1fr; }
-      .captcha{width:100%}
+    .form-container button:hover:enabled {
+      background: #00ffaa;
+      box-shadow: 0 0 20px #00ffaa, 0 0 40px #00ffaa;
+    }
+
+    .success-message {
+      color: #00ffaa;
+      margin-top: 15px;
+      text-shadow: 0 0 10px #00ffaa;
+    }
+
+    .captcha {
+      margin: 15px 0;
+      text-align: left;
+      color: #0ff;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" role="region" aria-label="Neon Wishes form">
+  <div class="form-container">
+    <h1>💡 Share Your Wish!</h1>
+    <form id="wishForm">
+      <input type="text" name="name" id="name" placeholder="Your Name" required>
+      <input type="text" name="phone" id="phone" placeholder="Phone Number (+91XXXXXXXXXX)" required>
+      <input type="email" name="user_email" id="email" placeholder="Email Address" required>
+      <textarea name="wish" id="wish" placeholder="What do you want free on the internet that isn’t free yet?" required></textarea>
 
-      <div class="hero">
-        <div class="neon-badge">Neon Wishes</div>
-        <div>
-          <div style="font-weight:700;font-size:18px">Make something free ✨</div>
-          <div class="subtitle">Tell us what should be free on the internet — we'll collect and share ideas.</div>
-        </div>
+      <div class="captcha">
+        <input type="checkbox" id="captcha"> I am not a robot 🤖
       </div>
 
-      <form id="wishForm" class="grid" autocomplete="off" novalidate>
-        <!-- Left: Name -->
-        <div class="field">
-          <input id="name" name="name" type="text" placeholder=" " autocomplete="name" required />
-          <label class="floating" for="name">Full name</label>
-        </div>
-
-        <!-- Right: Phone (Indian +91) -->
-        <div class="field">
-          <input id="phone" name="phone" type="tel" placeholder=" " inputmode="tel" required />
-          <label class="floating" for="phone">Phone (must be +91XXXXXXXXXX)</label>
-        </div>
-
-        <!-- Email full width -->
-        <div class="field full">
-          <input id="email" name="email" type="email" placeholder=" " required />
-          <label class="floating" for="email">Email address</label>
-        </div>
-
-        <!-- Wish textarea -->
-        <div class="field full">
-          <textarea id="wish" name="wish" placeholder=" " required></textarea>
-          <label class="floating" for="wish">What do you want free on the internet that isn't free yet?</label>
-        </div>
-
-        <!-- validations & captcha -->
-        <div class="validations">
-          <div class="errors" id="errors" aria-live="polite"></div>
-
-          <div class="captcha" id="captchaBox" aria-hidden="false">
-            <div style="font-weight:600;color:var(--neon2)">I am not a robot</div>
-            <div class="hint">Please check box and solve the small math question</div>
-            <div class="row" style="margin-top:8px">
-              <input id="humanCheckbox" type="checkbox" aria-label="I am not a robot checkbox"/>
-              <label for="humanCheckbox">I'm human</label>
-            </div>
-
-            <div style="margin-top:12px;font-size:13px" id="captchaQuestion"></div>
-            <div class="row">
-              <input id="captchaAnswer" type="text" placeholder="Answer" inputmode="numeric" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)"/>
-              <button type="button" id="newCaptcha" style="padding:8px;border-radius:8px;border:none;background:transparent;color:var(--neon1);cursor:pointer">↻</button>
-            </div>
-            <div class="hint" style="margin-top:10px">Captcha must be solved to enable submit.</div>
-          </div>
-        </div>
-
-        <div class="actions full" style="justify-content:space-between;align-items:center;">
-          <div>
-            <button type="submit" id="submitBtn" class="btn" disabled>🚀 Submit Wish</button>
-            <div class="hint" id="sendHint">Submit is disabled until validations pass</div>
-          </div>
-          <div class="status" id="statusText">Status: idle</div>
-        </div>
-      </form>
-    </div>
+      <button type="submit" id="submitBtn" disabled>🚀 Submit</button>
+      <p class="success-message" id="successMsg" style="display:none;">Your wish has been sent! ✅</p>
+    </form>
   </div>
 
   <script>
-    // ---------- CONFIG: EmailJS IDs (from you) ----------
-    const EMAILJS_SERVICE = 'service_f20a7xk';
-    const EMAILJS_TEMPLATE = 'template_hwlzvnj';
-    const EMAILJS_PUBLIC_KEY = 'eV9GmBZdy2ByqSZmw';
-    // ----------------------------------------------------
+    (function(){
+      emailjs.init("eV9GmBZdy2ByqSZmw");
+    })();
 
-    // INIT EmailJS
-    (function(){ emailjs.init(EMAILJS_PUBLIC_KEY); })();
+    const emailField = document.getElementById("email");
+    const phoneField = document.getElementById("phone");
+    const nameField = document.getElementById("name");
+    const wishField = document.getElementById("wish");
+    const captchaBox = document.getElementById("captcha");
+    const submitBtn = document.getElementById("submitBtn");
 
-    // Elements
-    const form = document.getElementById('wishForm');
-    const nameEl = document.getElementById('name');
-    const phoneEl = document.getElementById('phone');
-    const emailEl = document.getElementById('email');
-    const wishEl = document.getElementById('wish');
-    const errorsEl = document.getElementById('errors');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusText = document.getElementById('statusText');
-    const sendHint = document.getElementById('sendHint');
-
-    // captcha elements
-    const humanCheckbox = document.getElementById('humanCheckbox');
-    const captchaQuestion = document.getElementById('captchaQuestion');
-    const captchaAnswer = document.getElementById('captchaAnswer');
-    const newCaptchaBtn = document.getElementById('newCaptcha');
-
-    // internal captcha expected value
-    let captchaExpected = null;
-
-    // helper: generate a friendly math captcha
-    function generateCaptcha() {
-      // small easy sums to be user-friendly
-      const a = Math.floor(Math.random()*8) + 1; // 1..8
-      const b = Math.floor(Math.random()*9) + 1; // 1..9
-      captchaExpected = a + b;
-      captchaQuestion.textContent = `What is ${a} + ${b} ?`;
-      captchaAnswer.value = '';
-    }
-    generateCaptcha();
-
-    newCaptchaBtn.addEventListener('click', () => {
-      generateCaptcha();
-      validateAll();
-    });
-
-    // ---------- Validation helpers ----------
-
-    // Multiple email checks (~12 criteria)
     function validateEmail(email) {
-      const errs = [];
-      if(!email) { errs.push('Email is required.'); return errs; }
-      const len = email.length;
-      if(len < 6) errs.push('Email is too short (min 6 chars).');
-      if(len > 320) errs.push('Email is too long.');
-      if(/\s/.test(email)) errs.push('Email must not contain spaces.');
-      const atCount = (email.match(/@/g) || []).length;
-      if(atCount !== 1) errs.push('Email must contain exactly one "@" symbol.');
-
-      const [local, domain] = email.split('@');
-      if(!local || !domain) { errs.push('Email local part or domain missing.'); return errs; }
-      if(local.length > 64) errs.push('Local part (before @) must be ≤ 64 chars.');
-      if(domain.length > 255) errs.push('Domain part (after @) must be ≤ 255 chars.');
-
-      // local allowed chars (basic RFC-ish)
-      const localAllowed = /^[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~.]+$/;
-      if(!localAllowed.test(local)) errs.push('Local part contains invalid characters.');
-
-      // no starting/ending dot; no consecutive dots in local
-      if(local.startsWith('.') || local.endsWith('.')) errs.push('Local part must not start or end with a dot.');
-      if(local.indexOf('..') !== -1) errs.push('Local part must not contain consecutive dots.');
-
-      // domain basic checks
-      if(domain.indexOf('.') === -1) errs.push('Domain must contain at least one dot (e.g. example.com).');
-      const domainLabels = domain.split('.');
-      if(domainLabels.some(lbl => lbl.length === 0)) errs.push('Domain labels must not be empty.');
-      if(domainLabels.some(lbl => lbl.length > 63)) errs.push('Each domain label must be ≤ 63 characters.');
-      // domain label allowed chars
-      const domainLabelAllowed = /^[A-Za-z0-9-]+$/;
-      domainLabels.forEach(lbl => {
-        if(!domainLabelAllowed.test(lbl)) errs.push('Domain contains invalid characters (only letters, digits, hyphen).');
-        if(lbl.startsWith('-') || lbl.endsWith('-')) errs.push('Domain labels must not start or end with hyphen.');
-      });
-
-      // tld length
-      const tld = domainLabels[domainLabels.length-1] || '';
-      if(tld.length < 2 || tld.length > 24) errs.push('Top-level domain (TLD) length seems invalid.');
-
-      // no funny multiple dots overall
-      if(/\.{3,}/.test(email)) errs.push('Email contains too many consecutive dots.');
-
-      // optional: basic regex fallback for overall shape
-      const overall = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if(!overall.test(email)) errs.push('Email must be in a valid format (example@domain.com).');
-
-      return Array.from(new Set(errs)); // unique
+      const checks = [
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+        email.length <= 50,
+        !email.includes(".."),
+        !email.startsWith("."),
+        !email.endsWith("."),
+        !email.includes("@-") && !email.includes("-@"),
+        email.split("@").length === 2,
+        [".com", ".in", ".org", ".net", ".co"].some(d => email.endsWith(d)),
+        /^[a-zA-Z0-9._%+-@]+$/.test(email),
+      ];
+      return checks.every(Boolean);
     }
 
-    // Indian phone +91 validation with added sanity checks
     function validatePhone(phone) {
-      const errs = [];
-      if(!phone) { errs.push('Phone is required.'); return errs; }
-      // normalize (remove spaces, dashes)
-      const raw = phone.replace(/[\s-]/g, '');
-      if(!raw.startsWith('+91')) errs.push('Phone must begin with country code +91.');
-      const digits = raw.replace(/\D/g, '');
-      if(digits.length !== 12) errs.push('After +, phone must be 12 digits total including country code (+91XXXXXXXXXX).');
-      const local = digits.slice(2); // last 10 digits
-      if(!/^[6-9][0-9]{9}$/.test(local)) errs.push('Indian mobile numbers must be 10 digits and start with 6-9.');
-
-      // reject trivial numbers (all same)
-      if(/^(.)\1+$/.test(local)) errs.push('Phone looks invalid (repeating digits).');
-
-      // reject simple ascending or descending sequences
-      const asc = '0123456789012345';
-      const desc = '543210987654321';
-      if(asc.includes(local) || desc.includes(local)) errs.push('Phone looks like a sequential number; please confirm it is correct.');
-
-      // reject common fake like 1234567890
-      if(/1234567890|0987654321/.test(local)) errs.push('Phone appears to be a test or invalid number.');
-
-      return Array.from(new Set(errs));
+      return /^\+91[6-9][0-9]{9}$/.test(phone);
     }
 
-    function validateWish(wish) {
-      const errs = [];
-      if(!wish || !wish.trim()) { errs.push('Your wish cannot be empty.'); return errs; }
-      const len = wish.trim().length;
-      if(len < 6) errs.push('Wish is too short (min 6 characters).');
-      if(len > 800) errs.push('Wish is too long (max 800 characters).');
-      // discourage newline-only or spammy input
-      if(/^[\W_]+$/.test(wish)) errs.push('Wish must contain meaningful text.');
-      return errs;
+    function validateForm() {
+      const valid =
+        nameField.value.trim().length > 1 &&
+        validateEmail(emailField.value.trim()) &&
+        validatePhone(phoneField.value.trim()) &&
+        wishField.value.trim().length > 3 &&
+        captchaBox.checked;
+      submitBtn.disabled = !valid;
     }
 
-    function validateCaptcha() {
-      const errs = [];
-      if(!humanCheckbox.checked) errs.push('Please check the "I\'m human" checkbox.');
-      const answer = captchaAnswer.value.trim();
-      if(answer === '') errs.push('Please answer the captcha math question.');
-      else if(Number(answer) !== captchaExpected) errs.push('Captcha answer is incorrect.');
-      return errs;
-    }
+    emailField.addEventListener("input", validateForm);
+    phoneField.addEventListener("input", validateForm);
+    nameField.addEventListener("input", validateForm);
+    wishField.addEventListener("input", validateForm);
+    captchaBox.addEventListener("change", validateForm);
 
-    // combine all validations
-    function validateAll() {
-      const email = emailEl.value.trim();
-      const phone = phoneEl.value.trim();
-      const wish = wishEl.value;
-      const name = nameEl.value.trim();
+    document.getElementById("wishForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-      const allErrors = [];
-
-      // name checks basic
-      if(!name) allErrors.push('Name is required.');
-      else if(name.length < 2) allErrors.push('Name seems too short.');
-
-      // email
-      const emailErrs = validateEmail(email);
-      allErrors.push(...emailErrs);
-
-      // phone
-      const phoneErrs = validatePhone(phone);
-      allErrors.push(...phoneErrs);
-
-      // wish
-      const wishErrs = validateWish(wish);
-      allErrors.push(...wishErrs);
-
-      // captcha
-      const captchaErrs = validateCaptcha();
-      allErrors.push(...captchaErrs);
-
-      // render errors (or success)
-      errorsEl.innerHTML = '';
-      if(allErrors.length === 0) {
-        errorsEl.style.color = 'var(--accent)';
-        errorsEl.innerHTML = '<strong>All checks passed ✅</strong><div class="hint" style="color:var(--muted);margin-top:8px">Ready to submit — click <strong>Submit Wish</strong>.</div>';
-        submitBtn.disabled = false;
-        sendHint.textContent = 'All checks passed — ready to send';
-        statusText.textContent = 'Status: ready';
-      } else {
-        // show up to 10 errors
-        const list = document.createElement('ul');
-        list.style.paddingLeft = '18px';
-        allErrors.slice(0,12).forEach(msg => {
-          const li = document.createElement('li');
-          li.textContent = msg;
-          list.appendChild(li);
-        });
-        errorsEl.appendChild(list);
-        submitBtn.disabled = true;
-        sendHint.textContent = 'Fix the errors above to enable submit';
-        statusText.textContent = 'Status: awaiting validation';
-      }
-      return allErrors;
-    }
-
-    // wire up events to validate on-the-fly
-    [nameEl, phoneEl, emailEl, wishEl, humanCheckbox, captchaAnswer].forEach(el => {
-      el.addEventListener('input', () => validateAll());
-      el.addEventListener('blur', () => validateAll());
-    });
-
-    // initial validation run
-    validateAll();
-
-    // ---------- Submit handler: builds explicit templateParams and sends via EmailJS ----------
-    form.addEventListener('submit', function(ev) {
-      ev.preventDefault();
-      const errs = validateAll();
-      if(errs.length > 0) {
-        // don't submit if still errors
-        statusText.textContent = 'Status: fix errors first';
-        return;
-      }
-
-      // disable button and show sending
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-      statusText.textContent = 'Status: sending';
-
-      // build clean params to ensure every field is explicitly included
       const params = {
-        name: nameEl.value.trim(),
-        phone: phoneEl.value.trim().replace(/\s+/g,''),
-        user_email: emailEl.value.trim(),
-        wish: wishEl.value.trim(),
-        submitted_at: new Date().toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' })
+        name: nameField.value.trim(),
+        phone: phoneField.value.trim(),
+        user_email: emailField.value.trim(),
+        wish: wishField.value.trim(),
+        submitted_at: new Date().toLocaleString()
       };
 
-      // Send via EmailJS (explicitly send object to ensure every field is included)
-      emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, params)
-        .then(function(response) {
-          submitBtn.textContent = 'Sent ✅';
-          statusText.textContent = 'Status: sent';
-          errorsEl.style.color = 'var(--accent)';
-          errorsEl.innerHTML = '<strong>Thank you — wish sent!</strong>';
-          // reset inputs but keep captcha fresh
-          form.reset();
-          generateCaptcha();
-          setTimeout(() => {
-            submitBtn.textContent = '🚀 Submit Wish';
-            submitBtn.disabled = true; // require re-validate
-            statusText.textContent = 'Status: idle';
-            sendHint.textContent = 'Submit is disabled until validations pass';
-          }, 1700);
-        }, function(error) {
-          console.error('EmailJS send error:', error);
-          submitBtn.textContent = 'Send failed — retry';
-          statusText.textContent = 'Status: error sending';
-          errorsEl.style.color = '#ff8b8b';
-          errorsEl.innerHTML = '<strong>Error sending — please try again later.</strong>';
-          submitBtn.disabled = false;
+      emailjs.send("service_f20a7xk", "template_hwlzvnj", params)
+        .then(() => {
+          document.getElementById("successMsg").style.display = "block";
+          this.reset();
+          submitBtn.disabled = true;
+        }, (err) => {
+          alert("Error sending your wish: " + JSON.stringify(err));
         });
     });
-
-    // Good UX: auto-prepend +91 if user types only 10 digits
-    phoneEl.addEventListener('blur', () => {
-      let v = phoneEl.value.trim();
-      if(v === '') return;
-      // remove spaces/dashes
-      v = v.replace(/[^\d+]/g, '');
-      if(/^[6-9]\d{9}$/.test(v)) {
-        phoneEl.value = '+91' + v;
-      } else if(/^\d{10}$/.test(v)) {
-        phoneEl.value = '+91' + v;
-      }
-      validateAll();
-    });
-
-    // Keep validations live if user toggles checkbox
-    humanCheckbox.addEventListener('change', () => validateAll());
-
   </script>
 </body>
 </html>
