@@ -4,15 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neon Feedback Form</title>
+  <!-- ✅ NEW EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  (function(){
-    emailjs.init({
-      publicKey: "eV9GmBZdy2ByqSZmw"
-    });
-  })();
-</script>
-
   <style>
     body {
       background-color: #0a0a0a;
@@ -23,7 +16,6 @@
       height: 100vh;
       margin: 0;
     }
-
     .form-container {
       background: rgba(20, 20, 20, 0.95);
       padding: 30px;
@@ -33,12 +25,10 @@
       text-align: center;
       color: #fff;
     }
-
     .form-container h1 {
       color: #0ff;
       text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
-
     .form-container input,
     .form-container textarea {
       width: 100%;
@@ -52,12 +42,10 @@
       font-size: 14px;
       box-shadow: inset 0 0 10px #0ff;
     }
-
     .form-container textarea {
       resize: none;
       height: 100px;
     }
-
     .form-container button {
       width: 100%;
       padding: 12px;
@@ -72,25 +60,21 @@
       transition: 0.3s;
       box-shadow: 0 0 15px #0ff, 0 0 25px #0ff;
     }
-
     .form-container button:disabled {
       background: #333;
       color: #777;
       box-shadow: none;
       cursor: not-allowed;
     }
-
     .form-container button:hover:enabled {
       background: #00ffaa;
       box-shadow: 0 0 20px #00ffaa, 0 0 40px #00ffaa;
     }
-
     .success-message {
       color: #00ffaa;
       margin-top: 15px;
       text-shadow: 0 0 10px #00ffaa;
     }
-
     .captcha {
       margin: 15px 0;
       text-align: left;
@@ -102,10 +86,10 @@
   <div class="form-container">
     <h1>💡 Share Your Wish!</h1>
     <form id="wishForm">
-      <input type="text" name="name" id="name" placeholder="Your Name" required>
-      <input type="text" name="phone" id="phone" placeholder="Phone Number (+91XXXXXXXXXX)" required>
-      <input type="email" name="user_email" id="email" placeholder="Email Address" required>
-      <textarea name="wish" id="wish" placeholder="What do you want free on the internet that isn’t free yet?" required></textarea>
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="text" id="phone" placeholder="Phone Number (+91XXXXXXXXXX)" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <textarea id="wish" placeholder="What do you want free on the internet that isn’t free yet?" required></textarea>
 
       <div class="captcha">
         <input type="checkbox" id="captcha"> I am not a robot 🤖
@@ -117,8 +101,11 @@
   </div>
 
   <script>
+    // ✅ Initialize EmailJS
     (function(){
-      emailjs.init("eV9GmBZdy2ByqSZmw");
+      emailjs.init({
+        publicKey: "eV9GmBZdy2ByqSZmw"
+      });
     })();
 
     const emailField = document.getElementById("email");
@@ -128,6 +115,7 @@
     const captchaBox = document.getElementById("captcha");
     const submitBtn = document.getElementById("submitBtn");
 
+    // Validation functions
     function validateEmail(email) {
       const checks = [
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
@@ -142,11 +130,9 @@
       ];
       return checks.every(Boolean);
     }
-
     function validatePhone(phone) {
-      return /^\+91[6-9][0-9]{9}$/.test(phone);
+      return /^\+91[0-9]{10}$/.test(phone);
     }
-
     function validateForm() {
       const valid =
         nameField.value.trim().length > 1 &&
@@ -157,33 +143,35 @@
       submitBtn.disabled = !valid;
     }
 
+    // Events
     emailField.addEventListener("input", validateForm);
     phoneField.addEventListener("input", validateForm);
     nameField.addEventListener("input", validateForm);
     wishField.addEventListener("input", validateForm);
     captchaBox.addEventListener("change", validateForm);
 
+    // ✅ Submit handler using new SDK
     document.getElementById("wishForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
-const templateParams = {
-  name: nameField.value,
-  phone: phoneField.value,
-  user_email: emailField.value,
-  wish: wishField.value,
-  submitted_at: new Date().toLocaleString()
-};
+      const templateParams = {
+        name: nameField.value,
+        phone: phoneField.value,
+        user_email: emailField.value,
+        wish: wishField.value,
+        submitted_at: new Date().toLocaleString()
+      };
 
-emailjs.send("service_f20a7xk", "template_hwlzvnj", templateParams)
-  .then(() => {
-    document.getElementById("successMsg").style.display = "block";
-    document.getElementById("wishForm").reset();
-    submitBtn.disabled = true;
-  })
-  .catch((err) => {
-    alert("Error sending your wish: " + JSON.stringify(err));
-  });
+      emailjs.send("service_f20a7xk", "template_hwlzvnj", templateParams)
+        .then(() => {
+          document.getElementById("successMsg").style.display = "block";
+          document.getElementById("wishForm").reset();
+          submitBtn.disabled = true;
+        })
+        .catch((err) => {
+          alert("Error sending your wish: " + JSON.stringify(err));
+        });
+    });
   </script>
 </body>
 </html>
-
