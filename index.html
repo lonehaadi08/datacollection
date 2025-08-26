@@ -4,7 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neon Feedback Form</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init({
+      publicKey: "eV9GmBZdy2ByqSZmw"
+    });
+  })();
+</script>
+
   <style>
     body {
       background-color: #0a0a0a;
@@ -158,23 +166,24 @@
     document.getElementById("wishForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
-      const params = {
-        name: nameField.value.trim(),
-        phone: phoneField.value.trim(),
-        user_email: emailField.value.trim(),
-        wish: wishField.value.trim(),
-        submitted_at: new Date().toLocaleString()
-      };
+const templateParams = {
+  name: nameField.value,
+  phone: phoneField.value,
+  user_email: emailField.value,
+  wish: wishField.value,
+  submitted_at: new Date().toLocaleString()
+};
 
-      emailjs.send("service_f20a7xk", "template_hwlzvnj", params)
-        .then(() => {
-          document.getElementById("successMsg").style.display = "block";
-          this.reset();
-          submitBtn.disabled = true;
-        }, (err) => {
-          alert("Error sending your wish: " + JSON.stringify(err));
-        });
-    });
+emailjs.send("service_f20a7xk", "template_hwlzvnj", templateParams)
+  .then(() => {
+    document.getElementById("successMsg").style.display = "block";
+    document.getElementById("wishForm").reset();
+    submitBtn.disabled = true;
+  })
+  .catch((err) => {
+    alert("Error sending your wish: " + JSON.stringify(err));
+  });
   </script>
 </body>
 </html>
+
